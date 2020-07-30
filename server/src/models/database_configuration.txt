@@ -1,0 +1,6 @@
+CREATE USER 'toDoListUser'@'localhost' IDENTIFIED BY 'dummypass';
+CREATE DATABASE toDoListDB;
+GRANT ALL PRIVILEGES ON toDoListDB.* TO 'toDoListUser'@'localhost';
+SHOW GRANTS FOR 'toDoListUser'@'localhost';
+REVOKE ALL PRIVILEGES ON database_name.* FROM 'database_user'@'localhost';
+DROP USER 'user'@'localhost';
