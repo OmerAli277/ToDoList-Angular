@@ -1,0 +1,12 @@
+.vertical-line{
+    border-right: 1px solid rgba(0,0,0,.125);
+    padding-right: 0 !important;
+}
+
+ .title{
+     font-size: 20px;
+ }
+
+ .internal {
+     padding: 2%;
+ }

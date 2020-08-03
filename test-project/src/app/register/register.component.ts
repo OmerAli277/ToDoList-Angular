@@ -4,11 +4,9 @@ import { FormControl, FormGroup, Validators, AbstractControl, ValidatorFn } from
 import { Observable, throwError, fromEvent } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
-import { TodolistService } from '../todolist.service';
 import { Message } from '../models/message.model';
-import { User } from '../models/user.model';
 import { AuthenticationService } from '../authentication.service'
-import { AuthInterceptor } from '../auth-interceptor';
+import { User } from '../models/user.model';
 
 export function forbiddenPasswordValidator(nameRe: RegExp): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
@@ -16,7 +14,6 @@ export function forbiddenPasswordValidator(nameRe: RegExp): ValidatorFn {
     return forbidden ? {'forbiddenPassword': {value: control.value}} : null;
   };
 }
-
 
 @Component({
   selector: 'app-register',
@@ -41,7 +38,7 @@ export class RegisterComponent implements OnInit {
   CreationMessage : string;
 
   constructor(
-    private service: TodolistService
+    private service: AuthenticationService
   ) { }
 
   ngOnInit(): void {
