@@ -31,7 +31,7 @@ export class AuthControler {
         const token = jwt.sign(
             { userId: user!.id, useremail: user!.email },
             config.jwtSecret,
-            { expiresIn: "3600" }
+            { expiresIn: "1h" }
         );
     
         //Send the jwt in the response

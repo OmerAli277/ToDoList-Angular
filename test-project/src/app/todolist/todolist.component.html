@@ -1,0 +1,160 @@
+<div class="row">
+    <!-- <div class="offset-sm-8 col-sm-4" style="margin-bottom: 2%;">
+      Button trigger modal 
+    <button class="btn btn-outline-primary mb-2 mr-2" (click)="AddNewToDoListModal(content)">Add New ToDo List</button>
+    </div> -->
+  
+    <!-- Modal -->
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Add New ToDo List</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addNewToDoListForm">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <div class="input-group">
+              <input id="title" type="text" formControlName="title" class="form-control" placeholder="Enter Title." name="title">
+            </div>
+            <div *ngIf="title.invalid && (title.dirty || title.touched)"
+                class="alert alert-danger">
+                <div *ngIf="title.errors.required">
+                    Title is required.
+                </div>
+                <div *ngIf="title.errors.minlength">
+                    Title must be at least 4 characters long.
+                </div>
+                <div *ngIf="title.errors.maxlength">
+                  Title must be 40 characters long.
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" (click)="modal.close('Addnewtodolist')" [disabled]="!addNewToDoListForm.valid" class="btn btn-primary">Add ToDo List</button>
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      </div>
+    </ng-template>
+
+    <!-- Modal -->
+    <ng-template #contentTask let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Add New ToDo List</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addnewTaskForm">
+          <div class="form-group">
+            <label for="name">Task Name</label>
+            <div class="input-group">
+              <input id="name" type="text" formControlName="name" class="form-control" placeholder="Enter Name." name="name">
+            </div>
+            <div *ngIf="title.invalid && (title.dirty || title.touched)"
+                class="alert alert-danger">
+                <div *ngIf="title.errors.required">
+                    Title is required.
+                </div>
+                <div *ngIf="title.errors.minlength">
+                    Title must be at least 4 characters long.
+                </div>
+                <div *ngIf="title.errors.maxlength">
+                  Title must be 40 characters long.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Task Description</label>
+            <div class="input-group">
+              <input id="description" type="text" formControlName="description" class="form-control" placeholder="Write a description of the task (Optional)." name="description">
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" (click)="modal.close('AddnewTask')" [disabled]="!addnewTaskForm.valid" class="btn btn-primary">Add Task</button>
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      </div>
+    </ng-template>
+  
+    
+  
+  </div>
+  
+  
+  
+  
+  <div class="row">
+  
+      <div class="col-sm-5">
+  
+          <div class="card">
+              <div class="card-header">
+                  <span class="float-left"> <b>ToDo Lists</b>  </span> 
+                  <button class="btn btn-outline-primary mb-2 mr-2 float-right" (click)="AddNewToDoListModal(content)">Add New ToDo List</button>
+              </div>
+              <ul class="list-group">
+                  <li [id]="todolist.id" 
+                    class="list-group-item activate"
+                    [class] = "selectedToDoListNumber == todolist.id ? 'selected' : '' " 
+                    *ngFor="let todolist of todolistsArray"
+                    (click)="selectToDoList($event.target.id)">
+                    <div class="float-left">
+                      {{todolist.title}}
+                    </div>
+
+                    <div class="float-right icons">
+                      <span>
+                        <button type="button" class="btn btn-danger" >
+                          <img class="icons"  src='../../assets/images/delete.png'>
+                        </button>
+                        <button type="button" class="btn btn-danger">
+                          <img class="icons"  src='../../assets/images/next.png'>
+                        </button>
+                      </span>
+                    </div>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  
+      <div class="col-sm-7">
+  
+          <div class="card">
+              <div class="card-header">
+                  <span class="float-left"> 
+                    <b>Tasks of:</b>
+                    <span *ngIf="selectedToDoList$ | async as vm"> {{vm.title}}</span>
+                  </span> 
+                  <button [disabled]="!selectedToDoListBtn" class="btn btn-outline-primary mb-2 mr-2 float-right" (click)="AddNewTaskModal(contentTask)">Add New Task</button>
+              </div>
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Description</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let task of tasksArray; let i = index">
+                      <th scope="row">{{i + 1}} </th>
+                      <td>{{task.name}}</td>
+                      <td>{{task.description}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+          </div>
+          
+      </div>
+  
+  </div>
+      

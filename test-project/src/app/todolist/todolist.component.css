@@ -1,0 +1,21 @@
+/* .icons{
+    display: none;
+}
+
+.icons:hover {
+    display: block;
+} */
+
+.activate {
+    color: black;
+}
+
+.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.activate:hover {
+    background-color: #007bff;
+    color: white;
+}

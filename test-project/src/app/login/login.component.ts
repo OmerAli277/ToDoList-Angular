@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../authentication.service';
 
@@ -16,12 +17,21 @@ export class LoginComponent implements OnInit {
   });
 
   LoggedIN = '';
+  unauthorized = '';
 
   constructor(
-    private service: AuthenticationService
+    private service: AuthenticationService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.route.queryParams
+      .subscribe(params => {
+        if(params.unauthorized){
+          this.unauthorized = params.unauthorized;
+        }
+      });
   }
 
   onSubmit(){
@@ -29,7 +39,8 @@ export class LoginComponent implements OnInit {
     const _password = this.loginForm.get('password').value;
     this.service.login( _email, _password).subscribe((data:any)=>{
       this.LoggedIN = "Hurrah Log in ho gaya.";
-      console.log(data);
+      // console.log(data);
+      this.router.navigate(['todolists']);
     })
   }
 

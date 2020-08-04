@@ -21,7 +21,7 @@ app.listen( port, () => {
         console.log("database connected")
 
         try {
-            await sequlize.sync({alter: true})
+            await sequlize.sync()
         } catch (error) {
             console.log(error.message)
         }

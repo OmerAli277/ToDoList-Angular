@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AuthenticationService } from './authentication.service';
-import { Router } from '@angular/router';
 import { InterceptorSkip } from './skipHeaders';
+import { Router } from '@angular/router';
 
 
 
@@ -36,26 +35,31 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         // send cloned request with header to the next handler.
-        return next.handle(authReq).pipe(
-            catchError(this.handleError)
+        return next.handle(authReq)
+        .pipe(
+          catchError((err: Error | any) => {
+
+            if (err.error instanceof ErrorEvent) {
+              // A client-side or network error occurred. Handle it accordingly.
+              console.error('An error occurred:', err.error.message);
+            }
+            else if( err instanceof HttpErrorResponse){
+              if(err.status === 401)
+              {
+                if(authToken){
+                  this.router.navigate(['login'], { queryParams: { unauthorized: 'Session has expired login again.' } });
+                }
+                else{
+                  this.router.navigate(['login'], { queryParams: { unauthorized: 'You are not authorized to access this page. login First.' } });
+                }
+                this.auth.logout();
+              }
+              return throwError(err.error.message);
+            }
+            // Return an observable with a user-facing error message.
+            return throwError(err.error.message);
+          })
         );
     }
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
-    }
-    else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
-      if(error.error.type === '1'){
-          this.router.navigate(['Login']);
-      }
-    }
-
-    // Return an observable with a user-facing error message.
-    return throwError(error.error.message);
   }
 }

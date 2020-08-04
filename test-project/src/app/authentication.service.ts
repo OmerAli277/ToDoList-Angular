@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry, tap, shareReplay } from 'rxjs/operators';
+import { catchError, retry, tap, shareReplay} from 'rxjs/operators';
 import * as moment from "moment";
-import { tokenName } from '@angular/compiler';
+import { Router } from "@angular/router";
+
+
 import { InterceptorSkipHeader } from './skipHeaders';
 import { Message } from './models/message.model';
 import { User } from './models/user.model';
@@ -18,13 +20,14 @@ interface LoginMetaData {
 })
 export class AuthenticationService {
 
-  loginUrl = '/api/auth/token/obtain'
+  private loginUrl = '/api/auth/token/obtain'
   private registerUrl = '/api/user/register';
   private checkemailUrl = '/api/user/checkemail';
 
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   register(user: User) {
@@ -45,7 +48,7 @@ export class AuthenticationService {
   login(email:string, password:string ) {
     return this.http.post<LoginMetaData>(this.loginUrl, {email, password}, { headers : InterceptorSkipHeader })
     .pipe(
-      tap(res=>this.setSession),
+      tap(this.setSession),
       shareReplay(),
       catchError(this.handleError)
     )
@@ -70,10 +73,10 @@ export class AuthenticationService {
   private setSession(authResult) {
     const expiresAt = moment().add(authResult.expiresIn,'second');
 
-    localStorage.setItem('id_token', authResult.idToken);
+    localStorage.setItem('id_token', authResult.authorization);
     localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()) );
 
-    console.error("User Logged In >....\n\n\n\n" + authResult.idToken);
+    // console.error("User Logged In >....\n\n\n\n" + authResult.idToken);
   }          
 
   logout() {
